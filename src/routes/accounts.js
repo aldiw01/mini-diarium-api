@@ -28,12 +28,11 @@ router.post('/login', (req, res) => {
   const password = crypto.createHmac(HASH_ALGORITHM, CIPHER_SECRET).update(req.body.password).digest(CIPHER_BASE);
 
   db.cekLogin(email, password, function (err, data) {
-    if (data.length === 1 && (data[0].role !== "9")) {
+    if (data.length === 1) {
       //If all credentials are correct do this
       let token = jwt.sign({
         id: data[0].id,
         name: data[0].name,
-        role: data[0].role,
         email: data[0].email,
         photo: data[0].photo,
         registered: data[0].registered,
@@ -43,13 +42,6 @@ router.post('/login', (req, res) => {
         success: true,
         err: null,
         token
-      });
-    }
-    else if (data.length === 1 && data[0].role === "9") {
-      res.json({
-        success: false,
-        token: null,
-        err: "User is deactivated. Please contact web admin if something isn't right."
       });
     }
     else {

@@ -1,7 +1,7 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # uploads
-# /src/uploads/users/**
+/src/uploads/users/**
 
 # dependencies
 /node_modules

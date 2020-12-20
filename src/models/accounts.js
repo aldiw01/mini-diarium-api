@@ -26,11 +26,10 @@ module.exports = {
           data.push({
             id: items[0],
             name: items[1],
-            role: items[3],
-            email: items[4],
-            photo: items[5],
-            registered: items[6],
-            updated: items[7]
+            email: items[3],
+            photo: items[4],
+            registered: items[5],
+            updated: items[6]
           });
         });
       }

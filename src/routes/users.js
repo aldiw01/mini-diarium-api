@@ -47,10 +47,6 @@ router.get('/:id', (req, res) => {
   db.getUser(req.params, res)
 })
 
-router.get('/role/:id', jwtMW, (req, res) => {
-  db.getUserRole(req.params, res)
-})
-
 router.get('/search/:id', (req, res) => {
   db.getUserSearch(req.params, res)
 })
@@ -99,10 +95,6 @@ router.put('/photo/:id', jwtMW, (req, res) => {
 
     db.updateUserPhoto(req, res)
   })
-})
-
-router.put('/role/:id', jwtMW, (req, res) => {
-  db.updateUserRole(req, res)
 })
 
 /////////////////////////////////////////////////////////////////////////////////////////////

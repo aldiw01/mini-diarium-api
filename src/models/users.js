@@ -12,7 +12,7 @@ module.exports = {
   // USERS MODELS
 
   getUserAll: function (req, res) {
-    c.query("SELECT * FROM `users` ORDER BY `role`", null, { metadata: true, useArray: true }, function (err, rows) {
+    c.query("SELECT * FROM `users`", null, { metadata: true, useArray: true }, function (err, rows) {
       if (err) {
         res.send({ message: err.message });
         console.log(err);
@@ -25,35 +25,6 @@ module.exports = {
           id: items[0],
           name: items[1],
           // password: items[2],
-          role: items[3],
-          email: items[4],
-          photo: items[5],
-          registered: items[6],
-          updated: items[7]
-        });
-      });
-      if (data.length < 1) {
-        res.status(404).send('Data not found.');
-      } else {
-        res.json(data);
-      }
-    });
-    c.end();
-  },
-  getUser: function (req, res) {
-    c.query("SELECT u.`id`, u.`name`, r.`name`, u.`email`, u.`photo`, u.`registered`, u.`updated` FROM `users` u INNER JOIN `roles` r ON u.`role`=r.`id` WHERE u.`id`=?", [req.id], { metadata: true, useArray: true }, function (err, rows) {
-      if (err) {
-        res.send({ message: err.message });
-        console.log(err);
-        return
-      }
-
-      var data = [];
-      rows.forEach(function (items) {
-        data.push({
-          id: items[0],
-          name: items[1],
-          role: items[2],
           email: items[3],
           photo: items[4],
           registered: items[5],
@@ -68,8 +39,8 @@ module.exports = {
     });
     c.end();
   },
-  getUserRole: function (req, res) {
-    c.query("SELECT * FROM `users` WHERE `role`=?", [req.id], { metadata: true, useArray: true }, function (err, rows) {
+  getUser: function (req, res) {
+    c.query("SELECT * FROM `users` WHERE `id`=?", [req.id], { metadata: true, useArray: true }, function (err, rows) {
       if (err) {
         res.send({ message: err.message });
         console.log(err);
@@ -82,11 +53,10 @@ module.exports = {
           id: items[0],
           name: items[1],
           // password: items[2],
-          role: items[3],
-          email: items[4],
-          photo: items[5],
-          registered: items[6],
-          updated: items[7]
+          email: items[3],
+          photo: items[4],
+          registered: items[5],
+          updated: items[6]
         });
       });
       if (data.length < 1) {
@@ -99,7 +69,7 @@ module.exports = {
   },
   getUserSearch: function (req, res) {
     var request = ["%" + req.id + "%", "%" + req.id + "%"];
-    c.query("SELECT * FROM `users` WHERE `id` LIKE ? OR `name` LIKE ? ORDER BY `role`", request, { metadata: true, useArray: true }, function (err, rows) {
+    c.query("SELECT * FROM `users` WHERE `id` LIKE ? OR `name` LIKE ?", request, { metadata: true, useArray: true }, function (err, rows) {
       if (err) {
         res.send({ message: err.message });
         console.log(err);
@@ -112,11 +82,10 @@ module.exports = {
           id: items[0],
           name: items[1],
           // password: items[2],
-          role: items[3],
-          email: items[4],
-          photo: items[5],
-          registered: items[6],
-          updated: items[7]
+          email: items[3],
+          photo: items[4],
+          registered: items[5],
+          updated: items[6]
         });
       });
       if (data.length < 1) {
@@ -133,7 +102,6 @@ module.exports = {
       req.id,
       req.name,
       password,
-      '2',
       req.email,
       '',
       waktu,
@@ -143,7 +111,7 @@ module.exports = {
       res.send({ message: 'Bad Request: Parameters cannot empty.' });
       return
     }
-    c.query("INSERT INTO `users` (`id`, `name`, `password`, `role`, `email`, `photo`, `registered`, `updated`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", request, { metadata: true, useArray: true }, function (err, rows) {
+    c.query("INSERT INTO `users` (`id`, `name`, `password`, `email`, `photo`, `registered`, `updated`) VALUES (?, ?, ?, ?, ?, ?, ?)", request, { metadata: true, useArray: true }, function (err, rows) {
       if (err) {
         res.send({ message: err.message });
         console.log(err);
@@ -226,33 +194,6 @@ module.exports = {
           });
         });
       }
-    });
-    c.end();
-  },
-  updateUserRole: function (req, res) {
-    const waktu = new Date().toISOString();
-    var request = [
-      req.body.role,
-      waktu,
-      req.params.id
-    ];
-    if (request.includes(undefined)) {
-      res.send({ message: 'Bad Request: Parameters cannot empty.' });
-      return
-    }
-    c.query("UPDATE `users` SET `role`=?, `updated`=? WHERE `id`=?", request, { metadata: true, useArray: true }, function (err, rows) {
-      if (err) {
-        res.send({ message: err.message });
-        console.log(err);
-        return
-      }
-
-      res.json({
-        affectedRows: rows.info.affectedRows,
-        err: null,
-        message: "User Role has updated successfully",
-        success: true
-      });
     });
     c.end();
   },
